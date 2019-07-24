@@ -1,6 +1,15 @@
 import axios from 'axios'
 // import { resolve } from 'dns';
 
+const CITY_KEY = 'hkzf_city'
+
+// 获取localStorage中的定位城市
+const getCity = () => JSON.parse(localStorage.getItem(CITY_KEY))
+
+// 设置localStorage中的定位城市
+const setCity = curCity =>
+  localStorage.setItem(CITY_KEY, JSON.stringify(curCity))
+
 const BMap = window.BMap
 
 const getCurrentCity = () => {
@@ -26,4 +35,4 @@ const getCurrentCity = () => {
   }
 }
 
-export { getCurrentCity }
+export { getCurrentCity, getCity, setCity }

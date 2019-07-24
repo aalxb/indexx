@@ -12,8 +12,11 @@ html,body,#root,.app{
   touch-action: pan-y;
 }
 
-p,h3{
+p,h3,ul{
   margin: 0;
+}
+ul{
+  list-style: none;
 }
 a{
   color: #333;

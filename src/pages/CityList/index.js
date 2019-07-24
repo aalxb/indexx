@@ -1,33 +1,26 @@
 import React from 'react'
 // antd样式
-import { NavBar } from 'antd-mobile'
+import { NavBar, Toast } from 'antd-mobile'
 // 自己的样式
 import './index.scss'
 // 引入axios
 import axios from 'axios'
 // 引入自定义封装城市的定位方法
-import { getCurrentCity } from '../../utils'
+import { getCurrentCity, setCity } from '../../utils'
 // 表格
-// import List from 'react-virtualized/dist/commonjs/List'
-import { List } from 'react-virtualized';
+import { List, AutoSizer } from 'react-virtualized';
 
-// 渲染的列表数据
-const list = Array.from(new Array(100)).map(
-  (item, index) => `${index} -- 组件列表项`
-)
-// 渲染没一行的方法
-function rowRenderer({
-  key,
-  index,
-  style,
-  isVisible,
-  isScrolling
-}) {
-  return (
-    <div key={key} style={style}>
-      {list[index]} - {isScrolling + ''} -- {isVisible + ''}
-    </div>
-  )
+// 专门处理城市列表索引的方法
+const formatCityIndex = letter => {
+  // console.log(letter)
+  switch (letter) {
+    case '#':
+      return '当前定位'
+    case 'hot':
+      return '热门城市'
+    default:
+      return letter.toUpperCase()
+  }
 }
 
 // 封装排序列表的函数
@@ -48,16 +41,85 @@ const formatCityList = list => {
   }
 }
 
+// 搜索城市的列表 默认只有这几个城市有数据
+const CITY_HAS_HOUSE = ['北京', '上海', '广州', '深圳']
 export default class CityList extends React.Component {
   state = {
     // 城市列表数据（按字母顺序分类）
     cityList: {},
     // 城市索引列表
-    cityIndex: []
+    cityIndex: [],
+    activeIndex: 0
   }
+  // 钩子
   componentDidMount() {
     this.getCityList()
+    // this.listRef.current.measureAllRows()
   }
+  // 切换城市的按钮
+  chengeCity = ({ label, value }) => {
+    // console.log(label, value)
+    if (CITY_HAS_HOUSE.indexOf(label) > -1) {
+      setCity({ label, value })
+      this.props.history.go(-1)
+    } else {
+      Toast.info('该城市暂无房源数据', 1, null, false)
+    }
+  }
+  // 渲染没一行的方法
+  rowRenderer = ({ key, index, style }) => {
+    const { cityList, cityIndex } = this.state
+    const letter = cityIndex[index]
+    const list = cityList[letter]
+    return (
+      <div key={key} style={style} className="city">
+        <div className="title">{formatCityIndex(letter)}</div>
+        {list.map(item => (
+          <div key={item.value} onClick={() => this.chengeCity(item)} className="name">
+            {item.label}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  // 计算每行的高度
+  calcRowHeight = ({ index }) => {
+    // 传进来一个高度 index 标量
+    const { cityList, cityIndex } = this.state
+    const letter = cityIndex[index]
+    const list = cityList[letter]
+    return 36 + 50 * list.length
+  }
+  // 滚动会触发改事件,用来设置高亮
+  onRowsRendered = ({ startIndex }) => {
+    if (this.state.activeIndex !== startIndex) {
+      this.setState({
+        activeIndex: startIndex
+      })
+    }
+  }
+  // 点击直接跳转到首字母开头的城市
+  goToCityIndex = index => {
+    // console.log(index)
+    this.listRef.current.scrollToRow(index)
+  }
+  // 获取右侧的ABCD
+  renderCityIndex = () => {
+    const { cityIndex, activeIndex } = this.state
+    return (
+      cityIndex.map((item, index) => (
+        <li className="city-index-item" key={item} onClick={() => this.goToCityIndex(index)}>
+          <span className={index === activeIndex ? 'index-active' : ''}>
+            {item === 'hot' ? '热' : item.toUpperCase()}
+          </span>
+        </li>
+      ))
+    )
+  }
+  // 创建 ref 对象，用来获取 List 组件实例
+  listRef = React.createRef()
+
+  // 获取城市列表的数据请求
   async getCityList() {
     const res = await axios.get('http://localhost:8080/area/city?level=1')
     // console.log(res.data.body)
@@ -74,6 +136,8 @@ export default class CityList extends React.Component {
     this.setState({
       cityList,
       cityIndex
+    }, () => {
+      this.listRef.current.measureAllRows()
     })
   }
   render() {
@@ -85,13 +149,23 @@ export default class CityList extends React.Component {
           icon={<i className="iconfont icon-back" />}
           onLeftClick={() => console.log('onLeftClick')}
         >城市选择</NavBar>
-        <List
-          width={375}
-          height={300}
-          rowCount={list.length}
-          rowHeight={20}
-          rowRenderer={rowRenderer}
-        />
+        {/* 城市列表 */}
+        <AutoSizer>
+          {({ width, height }) => (
+            <List
+              ref={this.listRef}
+              width={width}
+              height={height}
+              rowCount={this.state.cityIndex.length}
+              rowHeight={this.calcRowHeight}
+              rowRenderer={this.rowRenderer}
+              onRowsRendered={this.onRowsRendered}
+              scrollToAlignment="start"
+            />
+          )}
+        </AutoSizer>
+        {/* 右侧列表abcd */}
+        <ul className="city-index">{this.renderCityIndex()}</ul>
       </div >
     )
   }

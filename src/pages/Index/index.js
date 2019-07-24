@@ -4,6 +4,9 @@ import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile';
 import axios from 'axios'
 // 引入布局样式
 import './index.scss'
+// 获取城市的方法
+import { getCurrentCity } from '../../utils'
+
 // nav的图片
 import nav1 from '../../assets/images/nav-1.png'
 import nav2 from '../../assets/images/nav-2.png'
@@ -25,15 +28,20 @@ export default class Index extends React.Component {
     // 租房小组数据
     groups: [],
     // news
-    news: []
+    news: [],
+    searchName: '上海'
   }
 
   // 渲染数据前的构子
-  componentDidMount() {
+  async componentDidMount() {
     this.getSwipers()
-    this.renderNav()
-    this.getGroups()
+    // this.getGroups()
     this.getNews()
+    const { label } = await getCurrentCity()
+    // console.log(label)
+    this.setState({
+      searchName: label
+    })
   }
 
   // 获取轮播图请求
@@ -127,7 +135,7 @@ export default class Index extends React.Component {
                 className="location"
                 onClick={() => this.props.history.push('/citylist')}
               >
-                <span>上海</span>
+                <span>{this.state.searchName}</span>
                 <i className="iconfont icon-arrow" />
               </div>
               <div
