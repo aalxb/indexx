@@ -1,6 +1,6 @@
 import React from 'react'
 // antd样式
-import { NavBar, Toast } from 'antd-mobile'
+import { Toast } from 'antd-mobile'
 // 自己的样式
 import './index.scss'
 // 引入axios
@@ -9,6 +9,8 @@ import axios from 'axios'
 import { getCurrentCity, setCity } from '../../utils'
 // 表格
 import { List, AutoSizer } from 'react-virtualized';
+// 头部
+import NavHeader from '../../components/NavHeader'
 
 // 专门处理城市列表索引的方法
 const formatCityIndex = letter => {
@@ -118,7 +120,6 @@ export default class CityList extends React.Component {
   }
   // 创建 ref 对象，用来获取 List 组件实例
   listRef = React.createRef()
-
   // 获取城市列表的数据请求
   async getCityList() {
     const res = await axios.get('http://localhost:8080/area/city?level=1')
@@ -143,12 +144,8 @@ export default class CityList extends React.Component {
   render() {
     return (
       <div className="citylist">
-        <NavBar
-          className="navbar"
-          mode="light"
-          icon={<i className="iconfont icon-back" />}
-          onLeftClick={() => console.log('onLeftClick')}
-        >城市选择</NavBar>
+        {/* 城市选择 */}
+        <NavHeader>城市选择</NavHeader>
         {/* 城市列表 */}
         <AutoSizer>
           {({ width, height }) => (

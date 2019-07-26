@@ -22,7 +22,7 @@ export default class Index extends React.Component {
     nav1: [
       { href: '/home/houselist', src: nav1, title: '整租' },
       { href: '/home/houselist', src: nav2, title: '合租' },
-      { href: '/home/map', src: nav3, title: '地图找房' },
+      { href: '/map', src: nav3, title: '地图找房' },
       { href: '/rent/add', src: nav4, title: '去出租' },
     ],
     // 租房小组数据
