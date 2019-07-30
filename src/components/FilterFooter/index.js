@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex } from 'antd-mobile'
 import styles from './index.module.css'
 
-export default function FilterFooter({ style, className, onCancel, onSave }) {
+function FilterFooter({ style, className, onCancel, onSave }) {
 
   return (
     <Flex style={style} className={[styles.root, className || ''].join(' ')}>
@@ -19,3 +19,5 @@ export default function FilterFooter({ style, className, onCancel, onSave }) {
   )
 
 }
+
+export default FilterFooter

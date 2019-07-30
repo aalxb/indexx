@@ -1,3 +1,4 @@
-const BASE_URL = process.env.REACT_APP_URl
+const BASE_URL = process.env.REACT_APP_URL
+
 
 export { BASE_URL }
