@@ -5,7 +5,9 @@ import axios from 'axios'
 // 引入布局样式
 import './index.scss'
 // 获取城市的方法
-import { getCurrentCity } from '../../utils'
+import { getCurrentCity, BASE_URL } from '../../utils'
+// 轮播图上的导航
+import SearchHeader from '../../components/SearchHeader'
 
 // nav的图片
 import nav1 from '../../assets/images/nav-1.png'
@@ -129,28 +131,7 @@ export default class Index extends React.Component {
         {/* 轮播图 */}
         <div className="swipers">
           {/* 轮播图上的导航 */}
-          <Flex className="search-box">
-            <Flex className="search-left">
-              <div
-                className="location"
-                onClick={() => this.props.history.push('/citylist')}
-              >
-                <span>{this.state.searchName}</span>
-                <i className="iconfont icon-arrow" />
-              </div>
-              <div
-                className="search-form"
-                onClick={() => this.props.history.push('/search')}
-              >
-                <i className="iconfont icon-seach" />
-                <span>请输入小区或地址</span>
-              </div>
-            </Flex>
-            <i
-              className="iconfont icon-map"
-              onClick={() => this.props.history.push('/map')}
-            />
-          </Flex>
+          <SearchHeader cityName={this.state.searchName} />
           {/* 轮播图的等待 */}
           {this.state.isSwiperLoading ? null : (
             <Carousel autoplay={true} infinite autoplayInterval={1000000}>
@@ -185,7 +166,7 @@ export default class Index extends React.Component {
                   <span>{v.desc}</span>
                 </div>
                 <div>
-                  <img src={`http://localhost:8080${v.imgSrc}`} alt="" />
+                  <img src={`${BASE_URL}${v.imgSrc}`} alt="" />
                 </div>
               </Flex>
             )}

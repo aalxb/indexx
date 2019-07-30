@@ -2,6 +2,8 @@ import React from 'react'
 import axios from 'axios'
 // 定位城市的方法
 import classNames from 'classnames'
+// loading效果
+import { Toast } from 'antd-mobile'
 import { getCurrentCity } from '../../utils'
 
 import './index.scss'
@@ -54,7 +56,7 @@ export default class Map extends React.Component {
       label
     )
     map.addEventListener('movestart', () => {
-      console.log('移动了')
+      // console.log('移动了')
       this.setState({
         isShowHouseList: false
       })
@@ -80,11 +82,13 @@ export default class Map extends React.Component {
   }
   // 获取下级数据
   async renderOverlays(id) {
+    Toast.loading('loading', null, 0, false)
     const res = await axios.get(`http://localhost:8080/area/map`, {
       params: {
         id
       }
     })
+    Toast.hide()
     const { nextZoom, type } = this.getTypeAndZoom()
     res.data.body.forEach(item => {
       this.createOverlays(type, nextZoom, item)
@@ -117,7 +121,7 @@ export default class Map extends React.Component {
     `)
     label.setStyle(labelStyle)
     label.addEventListener('click', () => {
-      console.log('点击了', id, zoom)
+      // console.log('点击了', id, zoom)
       this.renderOverlays(id)
       setTimeout(() => {
         this.map.clearOverlays()
@@ -156,11 +160,13 @@ export default class Map extends React.Component {
   }
   // 获取小区房源数据
   async getCommunityHouses(id) {
+    Toast.loading('拼命加载中.....', null, 0, false)
     const res = await axios.get(`http://localhost:8080/houses`, {
       params: {
         cityId: id
       }
     })
+    Toast.hide()
     // console.log(res)
     this.setState({
       isShowHouseList: true,
@@ -170,7 +176,9 @@ export default class Map extends React.Component {
   // 小区房源列表
   renderHouseList() {
     return this.state.houseList.map(item => (
-      <div className={styles.house} key={item.houseCode}>
+      <div className={styles.house} key={item.houseCode} onClick={() => {
+        this.props.history.push(`/detail/${item.houseCode}`)
+      }}>
         <div className={styles.imgWrap}>
           <img
             className={styles.img}

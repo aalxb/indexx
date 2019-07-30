@@ -31,3 +31,5 @@ const getCurrentCity = () => {
 }
 
 export { getCurrentCity, getCity, setCity }
+
+export { BASE_URL } from './url'
