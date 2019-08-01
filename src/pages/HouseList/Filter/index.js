@@ -31,7 +31,7 @@ export default class Filter extends React.Component {
     // 选中的数据
     selectedValues
   }
-
+  // 钩子
   componentDidMount() {
     this.getFiltersData()
   }
@@ -48,7 +48,7 @@ export default class Filter extends React.Component {
     })
     // console.log(this.state.filtersData)
   }
-  // 控制高亮
+  // 前三个控制高亮
   changeTitleSelected = (type) => {
     // console.log(type)
     const { titleSelectedStatus, selectedValues } = this.state
@@ -98,7 +98,6 @@ export default class Filter extends React.Component {
   // 是否显示遮罩层
   onCancel = (type) => {
     // console.log(type)
-
     const { selectedValues, titleSelectedStatus } = this.state
     const selectedVal = selectedValues[type]
     const newTitleSelectedStatus = this.getTitleSelectedStatus(type, selectedVal)
@@ -107,35 +106,53 @@ export default class Filter extends React.Component {
       titleSelectedStatus: { ...titleSelectedStatus, ...newTitleSelectedStatus }
     })
   }
+  // 点击确定保存获取到的数据
   onSave = (type, value) => {
-    console.log(type, value)
-    const { titleSelectedStatus } = this.state
+    const { titleSelectedStatus, selectedValues } = this.state
     const newTitleSelectedStatus = this.getTitleSelectedStatus(type, value)
 
+    const newSelectedValues = {
+      ...selectedValues, [type]: value
+    }
+    // 让父组件接收
+    const filters = {}
+    // 处理选中的是地铁还是区域
+    const area = newSelectedValues.area
+    const areaKey = area[0]
+    let areaValue
+    if (area.length === 2) {
+      areaValue = 'null'
+    } else if (area.length === 3) {
+      areaValue = area[2] === 'null' ? area[1] : area[2]
+    }
+    // 添加到对象中
+    filters[areaKey] = areaValue
+    filters.rentType = newSelectedValues.mode[0]
+    filters.price = newSelectedValues.price[0]
+    filters.more = newSelectedValues.more.join(',')
+    // 传递给父组件
+    this.props.onFilter(filters)
     this.setState({
       openType: '',
-
       titleSelectedStatus: {
         ...titleSelectedStatus,
         ...newTitleSelectedStatus
       },
 
       // 更新当前类型对应的选中值
-      selectedValues: {
-        ...this.state.selectedValues,
-        [type]: value
-      }
+      selectedValues: newSelectedValues
     })
   }
-  // 渲染筛选列表
+  // 渲染筛选列表户型
   renderFilterMore() {
-    const { openType, filtersData: { roomType, oriented, floor, characteristic } } = this.state
+    const { openType, filtersData: { roomType, oriented, floor, characteristic }, selectedValues } = this.state
     if (openType !== 'more') return null
 
     const data = { roomType, oriented, floor, characteristic }
-    return <FilterMore data={data}></FilterMore>
+    const defaultValue = selectedValues.more
+    return <FilterMore data={data} type={openType} defaultValue={defaultValue} onSave={this.onSave} onCancel={this.onCancel}></FilterMore>
   }
-  // 渲染选择城市选择的列表
+  // 前三个渲染选择城市选择的列表
   renderFilterPicker = () => {
     const { openType, filtersData: { area, subway, rentType, price }, selectedValues } = this.state
     if (openType === 'more' || openType === "") {

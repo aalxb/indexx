@@ -1,3 +1,7 @@
+.root {
+  height: 100%;
+}
+
 .listHeader {
   height: 45px;
   padding-left: 10px;
@@ -24,4 +28,13 @@
       color: #00ae66;
     }
   }
+}
+
+:global(.ReactVirtualized__List) {
+  padding: 0 10px;
+}
+
+.loading {
+  height: 110px;
+  background-color: #f6f5f6;
 }
