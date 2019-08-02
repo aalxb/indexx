@@ -46,7 +46,6 @@ export default class Filter extends React.Component {
     this.setState({
       filtersData: res.data.body
     })
-    // console.log(this.state.filtersData)
   }
   // 前三个控制高亮
   changeTitleSelected = (type) => {
@@ -86,7 +85,9 @@ export default class Filter extends React.Component {
     } else if (type === 'price' && selectedVal[0] !== 'null') {
       // 选中
       newTitleSelectedStatus[type] = true
-    } else if (type === 'more') {
+    } else if (type === 'more' && selectedVal.length > 0) {
+      // 选中
+      newTitleSelectedStatus[type] = true
     } else {
       // 不选中
       newTitleSelectedStatus[type] = false

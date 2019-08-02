@@ -6,6 +6,7 @@ import styles from './index.module.css'
 
 export default class FilterMore extends React.Component {
   state = {
+    // []
     selectedValues: this.props.defaultValue
   }
   // 捕获每一项的点击
@@ -20,10 +21,9 @@ export default class FilterMore extends React.Component {
       newSelectedValues.push(id)
     }
     this.setState({
-
       selectedValues: newSelectedValues
-
     })
+    console.log(selectedValues)
   }
 
   renderFilters(data) {
@@ -48,7 +48,7 @@ export default class FilterMore extends React.Component {
     return (
       <div className={styles.root}>
         {/* 遮罩层 */}
-        <div className={styles.mask} />
+        <div className={styles.mask} onClick={() => onCancel(type)} />
 
         {/* 条件内容 */}
         <div className={styles.tags}>

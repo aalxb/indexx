@@ -12,7 +12,7 @@ html,body,#root,.app{
   touch-action: pan-y;
 }
 
-p,h3,ul{
+p,h3,ul,dd{
   margin: 0;
 }
 ul{
