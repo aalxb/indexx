@@ -5,6 +5,7 @@ const CITY_KEY = 'hkzf_city'
 const getCity = () => JSON.parse(localStorage.getItem(CITY_KEY))
 // 设置localStorage中的定位城市
 const setCity = curCity => localStorage.setItem(CITY_KEY, JSON.stringify(curCity))
+// 地图
 const BMap = window.BMap
 
 const getCurrentCity = () => {
@@ -35,3 +36,5 @@ export { getCurrentCity, getCity, setCity }
 export { BASE_URL } from './url'
 
 export { API } from './api'
+
+export { getToken, setToken, removeToken, isAuth } from './token'

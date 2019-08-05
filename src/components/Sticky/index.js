@@ -1,6 +1,6 @@
 import React, { createRef } from "react"
 import styles from './index.module.scss'
-import PropTyprs from 'prop-types'
+import PropTypes from 'prop-types'
 
 class Sticky extends React.Component {
   // content 
@@ -9,9 +9,10 @@ class Sticky extends React.Component {
   placeholderRef = createRef()
 
   // 滚动事件的处理
-  handlaScroll = () => {
+  handleScroll = () => {
+    // debugger
     const { height } = this.props
-    // 占位符对象
+    // 占位符对象  这个地方有问题
     const placeholderEl = this.placeholderRef.current
     // dom对象
     const contentEl = this.contentRef.current
@@ -27,11 +28,11 @@ class Sticky extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.handlaScroll)
+    window.addEventListener('scroll', this.handleScroll)
   }
 
   componentWillUnmount() {
-    window.addEventListener('scroll', this.handlaScroll)
+    window.removeEventListener('scroll', this.handleScroll)
   }
 
   render() {
@@ -46,9 +47,9 @@ class Sticky extends React.Component {
   }
 }
 
-Sticky.PropTyprs = {
-  height: PropTyprs.number.isRequired,
-  children: PropTyprs.element.isRequired
+Sticky.propTypes = {
+  height: PropTypes.number.isRequired,
+  children: PropTypes.element.isRequired
 }
 
 export default Sticky

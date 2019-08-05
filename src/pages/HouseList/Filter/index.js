@@ -1,9 +1,10 @@
 import React from 'react'
-
+import { Spring } from 'react-spring/renderprops'
 // content
 import FilterTitle from '../FilterTitle'
 import FilterPicker from '../FilterPicker'
 import FilterMore from '../FilterMore'
+
 
 import { API, getCurrentCity } from '../../../utils/index'
 import styles from './index.module.css'
@@ -143,6 +144,7 @@ export default class Filter extends React.Component {
       // 更新当前类型对应的选中值
       selectedValues: newSelectedValues
     })
+    window.scrollTo(0, 0)
   }
   // 渲染筛选列表户型
   renderFilterMore() {
@@ -192,14 +194,38 @@ export default class Filter extends React.Component {
       defaultValue={defaultValue}
     />
   }
+
+  renderMask() {
+    const { openType } = this.state
+    const isHide = openType === 'more' || openType === ''
+
+
+    return (
+      <Spring
+        to={{ opacity: isHide ? 0 : 1 }}
+      >
+        {
+          props => {
+            if (props.opacity === 0) {
+              return null
+            }
+            return (
+              <div style={props} className={styles.mask} onClick={() => this.onCancel(openType)}>
+              </div>
+            )
+          }
+        }
+      </Spring>
+
+    )
+  }
   render() {
-    const { titleSelectedStatus, openType } = this.state
+    const { titleSelectedStatus } = this.state
     return (
       <div className={styles.root}>
         {/* 遮罩层 */}
-        {openType === 'area' || openType === 'mode' || openType === 'price' ? (
-          <div className={styles.mask} onClick={() => this.onCancel(openType)}></div>
-        ) : null}
+        {this.renderMask()}
+
         {/* 控制content */}
         <div className={styles.content}>
           <FilterTitle titleSelectedStatus={titleSelectedStatus} onClick={this.changeTitleSelected} />
