@@ -39,12 +39,12 @@ class Login extends Component {
                 name="username"
                 placeholder="请输入账号"
               />
-              <ErrorMessage
-                name="username"
-                component="div"
-                className={styles.error}
-              />
             </div>
+            <ErrorMessage
+              name="username"
+              component="div"
+              className={styles.error}
+            />
             {/* 长度为5到8位，只能出现数字、字母、下划线 */}
             {/* <div className={styles.error}>账号为必填项</div> */}
             <div className={styles.formItem}>
@@ -80,11 +80,11 @@ class Login extends Component {
 }
 
 Login = withFormik({
-  mapPropsToStatus: () => ({ password: '', username: '' }),
+  mapPropsToStatus: () => ({ password: '', username: 'test2' }),
   // validationSchema
   validationSchema: Yup.object().shape({
     username: Yup.string().required('账号为必填项').matches(REG_UNAME, '长度为5到8位，只能出现数字、字母、下划线 '),
-    password: Yup.string().required('密码为必填项').matches(REG_PWD, '长度为5到8位，只能出现数字、字母、下划线 ')
+    password: Yup.string().required('密码为必填项').matches(REG_PWD, '长度为5到12位，只能出现数字、字母、下划线 ')
   }),
   handleSubmit: async (values, { props }) => {
 
@@ -93,14 +93,22 @@ Login = withFormik({
       username,
       password
     })
+    // console.log()
     const { status, description, body } = res.data
+
     if (status === 200) {
       setToken(body.token)
-      props.history.go(-1)
-    }
-    else {
+      // props.history.go(-1)
+      if (props.location.state) {
+        props.history.replace(props.location.state.from.pathname)
+
+      } else {
+        props.history.go(-1)
+      }
+    } else {
       Toast.info(description)
     }
+
   }
 })(Login)
 

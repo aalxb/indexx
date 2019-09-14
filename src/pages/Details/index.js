@@ -305,8 +305,8 @@ export default class Details extends Component {
         </div>
 
         {/* 底部收藏按钮 */}
-        <Flex className={styles.fixedBottom}>
-          <Flex.Item>
+        <Flex className={styles.fixedBottom}  >
+          <Flex.Item >
             <img
               src={BASE_URL + '/img/unstar.png'}
               className={styles.favoriteImg}
@@ -314,7 +314,7 @@ export default class Details extends Component {
             />
             <span className={styles.favorite}>收藏</span>
           </Flex.Item>
-          <Flex.Item>在线咨询</Flex.Item>
+          <Flex.Item className={styles.txetctnet}>在线咨询</Flex.Item>
           <Flex.Item>
             <a href="tel:400-618-4000" className={styles.telephone}>
               电话预约

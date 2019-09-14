@@ -3,7 +3,7 @@ const TOKEN = 'hkzf_token'
 // 获取token
 export const getToken = () => localStorage.getItem(TOKEN)
 
-// 设置Token'  
+// 设置Token
 export const setToken = (token) => localStorage.setItem(TOKEN, token)
 
 // 删除token

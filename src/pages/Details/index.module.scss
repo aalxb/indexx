@@ -237,13 +237,27 @@
 
 .fixedBottom :global(div:first-child) {
   border-right: solid 1px #e8e8e9;
+  text-align: center;
 }
 
 .fixedBottom :global(div:last-child) {
   border-right: solid 1px #e8e8e9;
   background-color: #21b97a;
+  text-align: center;
 }
 
 .telephone {
   color: #fff;
+}
+
+.am-flexbox.am-flexbox-item {
+  text-align: center;
+}
+
+.fixedBottom {
+  text-align: center;
+}
+
+.txetctnet {
+  text-align: center;
 }
